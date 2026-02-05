@@ -4,13 +4,13 @@ export default function InfoPage() {
   return (
     <div className="flex h-full flex-col items-center justify-start overflow-y-auto px-4 py-8 md:flex-row md:items-center md:justify-center md:gap-12 md:px-8 md:py-12">
       {/* Bio Photo */}
-      <div className="relative mb-6 aspect-[3/4] w-full max-w-[200px] flex-shrink-0 md:mb-0 md:max-w-sm md:w-1/3">
+      <div className="relative mb-6 aspect-square w-full max-w-[200px] flex-shrink-0 md:mb-0 md:max-w-sm md:w-1/3">
         <Image
-          src="/bio.jpg"
+          src="/boris.jpg"
           alt="Boris Halas"
           fill
           className="object-cover"
-          sizes="(max-width: 768px) 100vw, 33vw"
+          sizes="(max-width: 768px) 200px, 384px"
           priority
         />
       </div>
