@@ -1,65 +1,26 @@
-import Image from "next/image";
+import { HorizontalGallery, GalleryImage } from "@/components/horizontal-gallery";
 
-export default function Home() {
-  return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
-  );
+const galleryImages: GalleryImage[] = [
+  { src: "/around/1.jpg", alt: "Around photo 1", width: 2338, height: 1535 },
+  { src: "/around/2.jpg", alt: "Around photo 2", width: 2433, height: 3629 },
+  { src: "/around/3.jpg", alt: "Around photo 3", width: 2929, height: 2043 },
+  { src: "/around/4.jpg", alt: "Around photo 4", width: 2433, height: 3629 },
+  { src: "/around/5.jpg", alt: "Around photo 5", width: 4535, height: 3118 },
+  { src: "/around/6.jpg", alt: "Around photo 6", width: 1535, height: 2291 },
+  { src: "/around/7.jpg", alt: "Around photo 7", width: 2548, height: 3548 },
+  { src: "/around/8.jpg", alt: "Around photo 8", width: 2005, height: 3024 },
+  { src: "/around/9.jpg", alt: "Around photo 9", width: 2432, height: 3637 },
+  { src: "/around/10.jpg", alt: "Around photo 10", width: 2075, height: 3130 },
+  { src: "/around/11.jpg", alt: "Around photo 11", width: 2075, height: 3130 },
+  { src: "/around/12.jpg", alt: "Around photo 12", width: 2429, height: 3637 },
+  { src: "/around/14.jpg", alt: "Around photo 14", width: 3130, height: 2075 },
+  { src: "/around/15.jpg", alt: "Around photo 15", width: 2063, height: 3480 },
+  { src: "/around/16.jpg", alt: "Around photo 16", width: 2279, height: 1535 },
+  { src: "/around/17.jpg", alt: "Around photo 17", width: 2279, height: 1535 },
+  { src: "/around/18.jpg", alt: "Around photo 18", width: 2075, height: 3130 },
+  { src: "/around/19.jpg", alt: "Around photo 19", width: 1229, height: 1818 },
+];
+
+export default function AroundPage() {
+  return <HorizontalGallery images={galleryImages} />;
 }
