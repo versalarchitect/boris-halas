@@ -30,33 +30,23 @@ export default function InfoPage() {
           <div>
             <h2 className="mb-2 text-sm font-medium uppercase tracking-wider">Contact</h2>
             <a
-              href="mailto:hello@borishalas.com"
+              href="mailto:borishalasphoto@gmail.com"
               className="text-foreground transition-colors hover:text-muted-foreground"
             >
-              hello@borishalas.com
+              borishalasphoto@gmail.com
             </a>
           </div>
 
           <div>
             <h2 className="mb-2 text-sm font-medium uppercase tracking-wider">Follow</h2>
-            <div className="flex justify-center gap-4 md:justify-start">
-              <a
-                href="https://www.instagram.com/borishalas/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-foreground transition-colors hover:text-muted-foreground"
-              >
-                Instagram
-              </a>
-              <a
-                href="https://vimeo.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-foreground transition-colors hover:text-muted-foreground"
-              >
-                Vimeo
-              </a>
-            </div>
+            <a
+              href="https://www.instagram.com/borishalas/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-foreground transition-colors hover:text-muted-foreground"
+            >
+              Instagram
+            </a>
           </div>
         </div>
       </div>

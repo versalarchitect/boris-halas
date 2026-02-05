@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
+import { ShareDialog } from "./share-dialog";
 
 const navItems = [
   { name: "Around", href: "/" },
@@ -20,9 +21,11 @@ const linkStyle = { fontFamily: '"Helvetica Neue", Arial, Helvetica, sans-serif'
 export function Sidebar() {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
+  const [isShareOpen, setIsShareOpen] = useState(false);
 
   return (
     <>
+      <ShareDialog isOpen={isShareOpen} onClose={() => setIsShareOpen(false)} />
       {/* Mobile menu button - hamburger when closed */}
       {!isOpen && (
         <button
@@ -100,10 +103,8 @@ export function Sidebar() {
               className="text-[12px] font-bold leading-[1.5] text-black no-underline transition-colors hover:text-muted-foreground"
               style={linkStyle}
               onClick={() => {
-                navigator.share?.({
-                  title: "Boris Halas Photography",
-                  url: window.location.href,
-                });
+                setIsOpen(false);
+                setIsShareOpen(true);
               }}
             >
               Share
@@ -117,7 +118,7 @@ export function Sidebar() {
             className="text-center text-[11px]"
             style={{ color: "rgb(136, 136, 136)", ...linkStyle }}
           >
-            © {new Date().getFullYear()} Boris Halas
+            © {new Date().getFullYear()} Boris Halas<br />Photography. All Rights Reserved.
           </p>
         </div>
       </div>
@@ -164,12 +165,7 @@ export function Sidebar() {
             <button
               className="text-[12px] font-bold leading-[1.5] text-black no-underline transition-colors hover:text-muted-foreground"
               style={linkStyle}
-              onClick={() => {
-                navigator.share?.({
-                  title: "Boris Halas Photography",
-                  url: window.location.href,
-                });
-              }}
+              onClick={() => setIsShareOpen(true)}
             >
               Share
             </button>
@@ -178,7 +174,7 @@ export function Sidebar() {
             className="mt-3 text-[11px]"
             style={{ color: "rgb(136, 136, 136)", ...linkStyle }}
           >
-            © {new Date().getFullYear()} Boris Halas
+            © {new Date().getFullYear()} Boris Halas<br />Photography. All Rights Reserved.
           </p>
         </div>
       </aside>

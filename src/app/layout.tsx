@@ -13,9 +13,34 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const siteUrl = "https://borishalas.com";
+
 export const metadata: Metadata = {
   title: "Boris Halas Photography",
-  description: "Professional photography portfolio of Boris Halas",
+  description: "Professional photography portfolio of Boris Halas - Portrait, music, fashion and street photography from Montréal.",
+  metadataBase: new URL(siteUrl),
+  openGraph: {
+    title: "Boris Halas Photography",
+    description: "Professional photography portfolio of Boris Halas - Portrait, music, fashion and street photography from Montréal.",
+    url: siteUrl,
+    siteName: "Boris Halas Photography",
+    images: [
+      {
+        url: "/og-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Boris Halas Photography",
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Boris Halas Photography",
+    description: "Professional photography portfolio of Boris Halas - Portrait, music, fashion and street photography from Montréal.",
+    images: ["/og-image.jpg"],
+  },
 };
 
 export default function RootLayout({
