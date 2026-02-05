@@ -17,15 +17,6 @@ export default function InfoPage() {
 
       {/* Bio Text */}
       <div className="max-w-md text-center md:text-left">
-        <p className="mb-6 text-sm leading-relaxed text-foreground md:mb-8 md:text-base">
-          Boris Halas is a Montréal-born photographer shooting predominantly on
-          analogue, who specializes mostly in portrait, music, fashion and street
-          photography. He has been documenting nightlife and culture in different
-          landmark cities such as Paris, Tokyo, LA, NYC and London to name a few.
-          Boris aims to create deep-rooted moments and visual experiences through
-          intimate portraits he captures.
-        </p>
-
         <div className="space-y-4">
           <div>
             <h2 className="mb-2 text-sm font-medium uppercase tracking-wider">Contact</h2>
