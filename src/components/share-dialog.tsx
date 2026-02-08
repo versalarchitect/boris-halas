@@ -27,7 +27,7 @@ export function ShareDialog({ isOpen, onClose }: ShareDialogProps) {
   const url = typeof window !== "undefined" ? window.location.href : "";
 
   const title = "Boris Halas Photography";
-  const description = "Check out this amazing photography portfolio by Boris Halas";
+  const description = "Boris Halas Photography";
 
   const copyToClipboard = async () => {
     try {
