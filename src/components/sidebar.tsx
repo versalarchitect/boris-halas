@@ -26,19 +26,30 @@ export function Sidebar() {
   return (
     <>
       <ShareDialog isOpen={isShareOpen} onClose={() => setIsShareOpen(false)} />
-      {/* Mobile menu button - hamburger when closed */}
+      {/* Mobile header bar - logo left, hamburger right */}
       {!isOpen && (
-        <button
-          onClick={() => setIsOpen(true)}
-          className="fixed left-4 top-4 z-[60] flex h-10 w-10 items-center justify-center md:hidden"
-          aria-label="Open menu"
-        >
-          <div className="flex flex-col gap-1.5">
-            <span className="block h-0.5 w-6 bg-black" />
-            <span className="block h-0.5 w-6 bg-black" />
-            <span className="block h-0.5 w-6 bg-black" />
-          </div>
-        </button>
+        <div className="fixed left-0 top-0 z-[60] flex w-full items-center justify-between px-4 py-2 md:hidden">
+          <Link href="/">
+            <Image
+              src="/logo.png"
+              alt="Boris Halas"
+              width={140}
+              height={70}
+              priority
+            />
+          </Link>
+          <button
+            onClick={() => setIsOpen(true)}
+            className="flex h-10 w-10 items-center justify-center"
+            aria-label="Open menu"
+          >
+            <div className="flex flex-col gap-1.5">
+              <span className="block h-0.5 w-6 bg-black" />
+              <span className="block h-0.5 w-6 bg-black" />
+              <span className="block h-0.5 w-6 bg-black" />
+            </div>
+          </button>
+        </div>
       )}
 
       {/* Mobile Menu - Full screen overlay */}

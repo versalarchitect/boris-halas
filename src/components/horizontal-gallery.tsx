@@ -51,7 +51,7 @@ export function HorizontalGallery({ images }: HorizontalGalleryProps) {
   return (
     <div
       ref={containerRef}
-      className="flex h-full gap-[3px] overflow-x-auto overflow-y-hidden scrollbar-hide"
+      className="flex h-full gap-[3px] overflow-x-auto overflow-y-hidden px-[3px] scrollbar-hide md:px-0"
     >
       {images.map((image, index) => (
         <div
