@@ -39,3 +39,11 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+.env*.local
+
+# payload local artifacts
+payload.db
+payload.db-journal
+/media
+/.evidence
+dev.log

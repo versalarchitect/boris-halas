@@ -9,13 +9,20 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@payloadcms/db-vercel-postgres": "^3.83.0",
+    "@payloadcms/next": "^3.83.0",
+    "@payloadcms/richtext-lexical": "^3.83.0",
+    "@payloadcms/storage-vercel-blob": "^3.83.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "graphql": "^16.13.2",
     "lucide-react": "^0.563.0",
     "next": "16.1.6",
+    "payload": "^3.83.0",
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "react-share": "^5.2.2",
+    "sharp": "^0.34.5",
     "tailwind-merge": "^3.4.0"
   },
   "devDependencies": {
@@ -34,6 +41,8 @@
     "unrs-resolver"
   ],
   "trustedDependencies": [
+    "bufferutil",
+    "esbuild",
     "sharp",
     "unrs-resolver"
   ]
