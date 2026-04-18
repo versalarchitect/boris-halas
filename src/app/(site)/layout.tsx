@@ -17,11 +17,11 @@ const siteUrl = "https://borishalas.com";
 
 export const metadata: Metadata = {
   title: "Boris Halas Photography",
-  description: "Professional photography portfolio of Boris Halas - Portrait, music, fashion and street photography from Montréal.",
+  description: " ",
   metadataBase: new URL(siteUrl),
   openGraph: {
     title: "Boris Halas Photography",
-    description: "Professional photography portfolio of Boris Halas - Portrait, music, fashion and street photography from Montréal.",
+    description: " ",
     url: siteUrl,
     siteName: "Boris Halas Photography",
     images: [
@@ -38,7 +38,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Boris Halas Photography",
-    description: "Professional photography portfolio of Boris Halas - Portrait, music, fashion and street photography from Montréal.",
+    description: " ",
     images: ["/og-image.jpg"],
   },
 };
