@@ -3,7 +3,7 @@ import { HorizontalGallery, GalleryImage } from "@/components/horizontal-gallery
 const galleryImages: GalleryImage[] = [
   { src: "/music/1.jpg", alt: "Music photo 1", width: 2075, height: 3130 },
   { src: "/music/2.jpg", alt: "Music photo 2", width: 1535, height: 2279 },
-  { src: "/music/3.jpg", alt: "Music photo 3", width: 983, height: 1303 },
+  { src: "/music/3.jpg", alt: "Music photo 3", width: 888, height: 1201 },
   { src: "/music/4.jpg", alt: "Music photo 4", width: 1229, height: 1818 },
   { src: "/music/5.jpg", alt: "Music photo 5", width: 2432, height: 3636 },
   { src: "/music/6.jpg", alt: "Music photo 6", width: 2075, height: 3130 },

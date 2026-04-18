@@ -4,209 +4,203 @@ import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
+import { Menu, X, Instagram } from "lucide-react";
 import { ShareDialog } from "./share-dialog";
 
 const navItems = [
   { name: "Around", href: "/" },
-  { name: "Music", href: "/music" },
-  { name: "Editorial", href: "/editorial" },
   { name: "Fashion", href: "/fashion" },
+  { name: "Editorial", href: "/editorial" },
+  { name: "Music", href: "/music" },
   { name: "Somewhere", href: "/somewhere" },
   { name: "Store", href: "/store" },
   { name: "Info", href: "/info" },
-];
+] as const;
 
-const linkStyle = { fontFamily: '"Helvetica Neue", Arial, Helvetica, sans-serif' };
+const INSTAGRAM_URL = "https://www.instagram.com/borishalas/";
 
 export function Sidebar() {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const [isShareOpen, setIsShareOpen] = useState(false);
 
+  const closeMenu = () => setIsOpen(false);
+  const openShare = () => {
+    setIsOpen(false);
+    setIsShareOpen(true);
+  };
+
   return (
     <>
       <ShareDialog isOpen={isShareOpen} onClose={() => setIsShareOpen(false)} />
-      {/* Mobile header bar - logo left, hamburger right */}
-      {!isOpen && (
-        <div className="fixed left-0 top-0 z-[60] flex w-full items-center justify-between px-4 py-2 md:hidden">
-          <Link href="/">
-            <Image
-              src="/logo.png"
-              alt="Boris Halas"
-              width={140}
-              height={70}
-              priority
-            />
-          </Link>
-          <button
-            onClick={() => setIsOpen(true)}
-            className="flex h-10 w-10 items-center justify-center"
-            aria-label="Open menu"
-          >
-            <div className="flex flex-col gap-1.5">
-              <span className="block h-0.5 w-6 bg-black" />
-              <span className="block h-0.5 w-6 bg-black" />
-              <span className="block h-0.5 w-6 bg-black" />
-            </div>
-          </button>
-        </div>
-      )}
-
-      {/* Mobile Menu - Full screen overlay */}
-      <div
-        className={`fixed inset-0 z-50 flex h-screen w-screen flex-col bg-white transition-opacity duration-300 md:hidden ${
-          isOpen ? "opacity-100" : "pointer-events-none opacity-0"
-        }`}
-      >
-        {/* Mobile header with logo and X button */}
-        <div className="flex items-center justify-between px-6 py-6">
-          <Link href="/" onClick={() => setIsOpen(false)}>
-            <Image
-              src="/logo.png"
-              alt="Boris Halas"
-              width={140}
-              height={70}
-              priority
-            />
-          </Link>
-          <button
-            onClick={() => setIsOpen(false)}
-            className="flex h-10 w-10 items-center justify-center"
-            aria-label="Close menu"
-          >
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <line x1="18" y1="6" x2="6" y2="18" />
-              <line x1="6" y1="6" x2="18" y2="18" />
-            </svg>
-          </button>
-        </div>
-
-        {/* Mobile nav links - centered */}
-        <div className="flex flex-1 flex-col items-center justify-center">
-          <nav className="flex flex-col items-center gap-1">
-            {navItems.map((item) => (
-              <Link
-                key={item.name}
-                href={item.href}
-                onClick={() => setIsOpen(false)}
-                className={`text-[12px] leading-[1.5] no-underline transition-colors hover:text-muted-foreground ${
-                  pathname === item.href ? "font-bold text-black" : "font-normal text-black"
-                }`}
-                style={linkStyle}
-              >
-                {item.name}
-              </Link>
-            ))}
-          </nav>
-
-          {/* Instagram under links */}
-          <div className="mt-8 flex items-center gap-2">
-            <a
-              href="https://www.instagram.com/borishalas/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-black transition-colors hover:text-muted-foreground"
-              aria-label="Instagram"
-            >
-              <InstagramIcon className="h-6 w-6" />
-            </a>
-            <button
-              className="text-[12px] font-bold leading-[1.5] text-black no-underline transition-colors hover:text-muted-foreground"
-              style={linkStyle}
-              onClick={() => {
-                setIsOpen(false);
-                setIsShareOpen(true);
-              }}
-            >
-              Share
-            </button>
-          </div>
-        </div>
-
-        {/* Mobile copyright at bottom */}
-        <div className="px-6 py-6">
-          <p
-            className="text-center text-[11px]"
-            style={{ color: "rgb(136, 136, 136)", ...linkStyle }}
-          >
-            © {new Date().getFullYear()} Boris Halas<br />Photography. All Rights Reserved.
-          </p>
-        </div>
-      </div>
-
-      {/* Desktop Sidebar */}
-      <aside className="relative hidden h-full w-52 flex-col justify-between bg-white px-6 py-8 md:flex">
-        <div>
-          <Link href="/" className="mb-8 block">
-            <Image
-              src="/logo.png"
-              alt="Boris Halas"
-              width={140}
-              height={70}
-              priority
-            />
-          </Link>
-          <nav className="flex flex-col gap-1">
-            {navItems.map((item) => (
-              <Link
-                key={item.name}
-                href={item.href}
-                className={`text-[12px] leading-[1.5] no-underline transition-colors hover:text-muted-foreground ${
-                  pathname === item.href ? "font-bold text-black" : "font-normal text-black"
-                }`}
-                style={linkStyle}
-              >
-                {item.name}
-              </Link>
-            ))}
-          </nav>
-        </div>
-
-        <div>
-          <div className="flex items-center gap-2">
-            <a
-              href="https://www.instagram.com/borishalas/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-black transition-colors hover:text-muted-foreground"
-              aria-label="Instagram"
-            >
-              <InstagramIcon className="h-6 w-6" />
-            </a>
-            <button
-              className="text-[12px] font-bold leading-[1.5] text-black no-underline transition-colors hover:text-muted-foreground"
-              style={linkStyle}
-              onClick={() => setIsShareOpen(true)}
-            >
-              Share
-            </button>
-          </div>
-          <p
-            className="mt-3 text-[11px]"
-            style={{ color: "rgb(136, 136, 136)", ...linkStyle }}
-          >
-            © {new Date().getFullYear()} Boris Halas<br />Photography. All Rights Reserved.
-          </p>
-        </div>
-      </aside>
+      {!isOpen && <MobileHeader onOpen={() => setIsOpen(true)} />}
+      <MobileMenu
+        open={isOpen}
+        pathname={pathname}
+        onClose={closeMenu}
+        onShare={openShare}
+      />
+      <DesktopSidebar pathname={pathname} onShare={() => setIsShareOpen(true)} />
     </>
   );
 }
 
-function InstagramIcon({ className }: { className?: string }) {
+function MobileHeader({ onOpen }: { onOpen: () => void }) {
   return (
-    <svg
-      className={className}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
+    <div className="fixed left-0 top-0 z-[60] flex w-full items-center justify-between px-4 py-2 md:hidden">
+      <Link href="/" aria-label="Home">
+        <Logo />
+      </Link>
+      <button
+        type="button"
+        onClick={onOpen}
+        aria-label="Open menu"
+        className="flex h-10 w-10 cursor-pointer items-center justify-center text-black"
+      >
+        <Menu className="h-6 w-6" strokeWidth={2} />
+      </button>
+    </div>
+  );
+}
+
+function MobileMenu({
+  open,
+  pathname,
+  onClose,
+  onShare,
+}: {
+  open: boolean;
+  pathname: string;
+  onClose: () => void;
+  onShare: () => void;
+}) {
+  return (
+    <div
+      className={`fixed inset-0 z-50 flex h-screen w-screen flex-col bg-white font-hn transition-opacity duration-300 md:hidden ${
+        open ? "opacity-100" : "pointer-events-none opacity-0"
+      }`}
     >
-      <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
-      <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
-      <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
-    </svg>
+      <div className="flex justify-end px-4 py-4">
+        <button
+          type="button"
+          onClick={onClose}
+          aria-label="Close menu"
+          className="flex h-10 w-10 cursor-pointer items-center justify-center text-black"
+        >
+          <X className="h-6 w-6" strokeWidth={2} />
+        </button>
+      </div>
+
+      <nav className="flex flex-1 flex-col items-center justify-center gap-5">
+        {navItems.map((item) => (
+          <Link
+            key={item.name}
+            href={item.href}
+            onClick={onClose}
+            className={`text-2xl leading-none no-underline transition-opacity hover:opacity-60 ${
+              pathname === item.href ? "font-bold" : "font-normal"
+            } text-black`}
+          >
+            {item.name}
+          </Link>
+        ))}
+      </nav>
+
+      <div className="flex flex-col items-center gap-4 px-6 pb-8 pt-6">
+        <Link href="/" onClick={onClose} aria-label="Home">
+          <Logo />
+        </Link>
+        <div className="flex items-center gap-2">
+          <a
+            href={INSTAGRAM_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Instagram"
+            className="inline-flex h-8 items-center gap-1.5 rounded-full border border-black bg-white px-3 text-[11px] font-medium text-black transition-colors hover:bg-black hover:text-white"
+          >
+            <Instagram className="h-3.5 w-3.5" strokeWidth={2} />
+            <span>Instagram</span>
+          </a>
+          <button
+            type="button"
+            onClick={onShare}
+            className="inline-flex h-8 cursor-pointer items-center rounded-full border border-black bg-white px-3 text-[11px] font-medium text-black transition-colors hover:bg-black hover:text-white"
+          >
+            Share
+          </button>
+        </div>
+        <p className="text-center text-[11px] text-[#888]">
+          © {new Date().getFullYear()} Boris Halas<br />Photography. All Rights Reserved.
+        </p>
+      </div>
+    </div>
+  );
+}
+
+function DesktopSidebar({
+  pathname,
+  onShare,
+}: {
+  pathname: string;
+  onShare: () => void;
+}) {
+  return (
+    <aside className="relative hidden h-full w-52 flex-col justify-between bg-white px-6 py-8 font-hn md:flex">
+      <div>
+        <Link href="/" className="mb-8 block" aria-label="Home">
+          <Logo />
+        </Link>
+        <nav className="flex flex-col gap-1">
+          {navItems.map((item) => (
+            <Link
+              key={item.name}
+              href={item.href}
+              className={`text-[12px] leading-[1.5] no-underline transition-colors hover:text-[#888] ${
+                pathname === item.href ? "font-bold" : "font-normal"
+              } text-black`}
+            >
+              {item.name}
+            </Link>
+          ))}
+        </nav>
+      </div>
+
+      <div>
+        <div className="flex items-center gap-2">
+          <a
+            href={INSTAGRAM_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Instagram"
+            className="text-black transition-colors hover:text-[#888]"
+          >
+            <Instagram className="h-6 w-6" strokeWidth={2} />
+          </a>
+          <button
+            type="button"
+            onClick={onShare}
+            className="cursor-pointer text-[12px] font-bold leading-[1.5] text-black no-underline transition-colors hover:text-[#888]"
+          >
+            Share
+          </button>
+        </div>
+        <p className="mt-3 text-[11px] text-[#888]">
+          © {new Date().getFullYear()} Boris Halas<br />Photography. All Rights Reserved.
+        </p>
+      </div>
+    </aside>
+  );
+}
+
+function Logo() {
+  return (
+    <Image
+      src="/logo.png"
+      alt="Boris Halas"
+      width={140}
+      height={70}
+      priority
+      style={{ height: "auto" }}
+    />
   );
 }
