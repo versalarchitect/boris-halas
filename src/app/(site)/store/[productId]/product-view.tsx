@@ -40,7 +40,14 @@ export function ProductView({ product }: ProductViewProps) {
   };
 
   return (
-    <div className="fixed inset-0 z-40 flex flex-col overflow-y-auto bg-white pb-4 pt-16 font-hn md:static md:z-auto md:h-full md:flex-row md:overflow-hidden md:pb-0 md:pt-0">
+    <div className="fixed inset-0 z-40 flex flex-col overflow-y-auto bg-white pb-4 pt-12 font-hn md:static md:z-auto md:h-full md:flex-row md:overflow-hidden md:pb-0 md:pt-0">
+      <Link
+        href="/store"
+        aria-label="Back to store"
+        className="fixed left-4 top-3 z-50 text-[11px] leading-[1.5] text-[#888] underline-offset-2 hover:underline md:hidden"
+      >
+        ← Store
+      </Link>
       {/* Image gallery */}
       <div className="flex flex-shrink-0 flex-col md:h-full md:w-1/2 md:flex-1 md:min-w-0">
         {/* Main image — image drives container size on mobile, fits strip on desktop */}
