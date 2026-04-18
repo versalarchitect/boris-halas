@@ -24,8 +24,6 @@ export function Sidebar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isShareOpen, setIsShareOpen] = useState(false);
 
-  const isProductDetail = pathname.startsWith("/store/");
-
   const closeMenu = () => setIsOpen(false);
   const openShare = () => {
     setIsOpen(false);
@@ -35,7 +33,7 @@ export function Sidebar() {
   return (
     <>
       <ShareDialog isOpen={isShareOpen} onClose={() => setIsShareOpen(false)} />
-      {!isOpen && !isProductDetail && <MobileHeader onOpen={() => setIsOpen(true)} />}
+      {!isOpen && <MobileHeader onOpen={() => setIsOpen(true)} />}
       <MobileMenu
         open={isOpen}
         pathname={pathname}

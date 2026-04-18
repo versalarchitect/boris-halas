@@ -83,7 +83,7 @@ export function Lightbox({ items, startIndex, onClose }: LightboxProps) {
         type="button"
         aria-label="Close"
         onClick={onClose}
-        className="absolute inset-0 cursor-default bg-white/70 backdrop-blur-md"
+        className="absolute inset-0 cursor-default bg-white md:bg-white/70 md:backdrop-blur-md"
       />
 
       {/* Image frame — image drives display size */}
