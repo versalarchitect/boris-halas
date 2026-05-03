@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { products, getProduct } from "@/lib/products";
+import { products, getProductById } from "@/lib/products";
 import { ProductView } from "./product-view";
 
 type Props = {
@@ -13,7 +13,7 @@ export function generateStaticParams() {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { productId } = await params;
-  const product = getProduct(productId);
+  const product = await getProductById(productId);
 
   if (!product) {
     return { title: "Boris Halas — Store" };
@@ -32,7 +32,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function ProductPage({ params }: Props) {
   const { productId } = await params;
-  const product = getProduct(productId);
+  const product = await getProductById(productId);
 
   if (!product) notFound();
 

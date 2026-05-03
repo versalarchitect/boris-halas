@@ -1,9 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
-import { products } from "@/lib/products";
+import { getProducts } from "@/lib/products";
 import { StoreScroller } from "./store-scroller";
 
-export default function StorePage() {
+export default async function StorePage() {
+  const products = await getProducts();
   return (
     <StoreScroller>
       {products.map((product, i) => {

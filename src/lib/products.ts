@@ -1,3 +1,5 @@
+import { supabase } from './supabase';
+
 export interface ProductImage {
   src: string;
   width: number;
@@ -23,6 +25,35 @@ export interface Product {
   materials: string[];
   careInstructions: string;
 }
+
+// Lookup map for product image dimensions from hardcoded data
+const imageDimensionsMap: Record<string, Record<string, { width: number; height: number }>> = {
+  ryoko_bag: {
+    "bag1.jpg": { width: 3435, height: 5152 },
+    "bag2.jpg": { width: 3186, height: 4779 },
+    "bag3.jpg": { width: 3648, height: 2432 },
+    "bag4.jpg": { width: 4728, height: 3152 },
+    "bag5.jpg": { width: 4927, height: 3285 },
+  },
+  book: {
+    "book1.jpg": { width: 3365, height: 5048 },
+    "book2.jpg": { width: 3435, height: 5153 },
+    "book3.jpg": { width: 3527, height: 5290 },
+    "book4.jpg": { width: 3261, height: 4892 },
+  },
+  cap_v2: {
+    "cap_v2_1.jpg": { width: 3179, height: 4769 },
+    "cap_v2_2.jpg": { width: 3529, height: 5294 },
+    "cap_v2_3.jpg": { width: 3426, height: 5139 },
+    "cap_v2_4.jpg": { width: 3409, height: 5114 },
+  },
+  cap_v1: {
+    "cap_v1_1.jpg": { width: 3437, height: 5155 },
+    "cap_v1_2.jpg": { width: 3402, height: 5103 },
+    "cap_v1_3.jpg": { width: 3503, height: 5254 },
+    "cap_v1_4.jpg": { width: 3499, height: 5248 },
+  },
+};
 
 export const products: Product[] = [
   {
@@ -198,4 +229,117 @@ export const products: Product[] = [
 
 export function getProduct(id: string): Product | undefined {
   return products.find((p) => p.id === id);
+}
+
+function mapSupabaseProduct(
+  row: Record<string, unknown>,
+  images: ProductImage[]
+): Product {
+  return {
+    id: row.id as string,
+    title: row.title as string,
+    category: row.category as string,
+    productCode: row.product_code as string,
+    status: row.status as "sold-out" | "available",
+    price: row.price as number,
+    currency: row.currency as string,
+    description: row.description as string,
+    longDescription: row.long_description as string,
+    specifications: row.specifications as string[],
+    features: row.features as string[],
+    tags: row.tags as string[],
+    weight: row.weight as string,
+    dimensions: row.dimensions as string,
+    materials: row.materials as string[],
+    careInstructions: row.care_instructions as string,
+    images,
+  };
+}
+
+function resolveImageDimensions(
+  productId: string,
+  filename: string
+): { width: number; height: number } {
+  return (
+    imageDimensionsMap[productId]?.[filename] ?? { width: 3000, height: 4500 }
+  );
+}
+
+export async function getProducts(): Promise<Product[]> {
+  try {
+    const { data: rows, error } = await supabase
+      .from('bh_products')
+      .select('*')
+      .order('sort_order', { ascending: true });
+
+    if (error || !rows?.length) {
+      console.error('Failed to fetch products from Supabase, using fallback:', error);
+      return products;
+    }
+
+    const productIds = rows.map((r: Record<string, unknown>) => r.id as string);
+    const { data: imageRows, error: imgError } = await supabase
+      .from('bh_product_images')
+      .select('product_id, filename, sort_order')
+      .in('product_id', productIds)
+      .order('sort_order', { ascending: true });
+
+    if (imgError) {
+      console.error('Failed to fetch product images from Supabase:', imgError);
+    }
+
+    const imagesByProduct: Record<string, ProductImage[]> = {};
+    for (const img of imageRows ?? []) {
+      const pid = img.product_id as string;
+      const filename = img.filename as string;
+      if (!imagesByProduct[pid]) imagesByProduct[pid] = [];
+      const dims = resolveImageDimensions(pid, filename);
+      imagesByProduct[pid].push({ src: filename, ...dims });
+    }
+
+    return rows.map((row: Record<string, unknown>) =>
+      mapSupabaseProduct(row, imagesByProduct[row.id as string] ?? [])
+    );
+  } catch (err) {
+    console.error('Supabase fetch failed, using fallback:', err);
+    return products;
+  }
+}
+
+export async function getProductById(id: string): Promise<Product | undefined> {
+  try {
+    const { data: row, error } = await supabase
+      .from('bh_products')
+      .select('*')
+      .eq('id', id)
+      .single();
+
+    if (error || !row) {
+      console.error('Failed to fetch product from Supabase, using fallback:', error);
+      return getProduct(id);
+    }
+
+    const { data: imageRows, error: imgError } = await supabase
+      .from('bh_product_images')
+      .select('filename, sort_order')
+      .eq('product_id', id)
+      .order('sort_order', { ascending: true });
+
+    if (imgError) {
+      console.error('Failed to fetch product images from Supabase:', imgError);
+    }
+
+    const images: ProductImage[] = (imageRows ?? []).map(
+      (img: Record<string, unknown>) => {
+        const filename = img.filename as string;
+        const dims = resolveImageDimensions(id, filename);
+        return { src: filename, ...dims };
+      }
+    );
+
+    return mapSupabaseProduct(row as Record<string, unknown>, images);
+  } catch (err) {
+    console.error('Supabase fetch failed, using fallback:', err);
+    return getProduct(id);
+  }
 }
