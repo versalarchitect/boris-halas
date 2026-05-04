@@ -50,9 +50,10 @@ export default function PasswordGate({ onAuthenticated }: PasswordGateProps) {
     <div
       className="fixed inset-0 z-[100] flex items-center justify-center"
       style={{
-        background: '#000',
-        opacity: isMounted ? 1 : 0,
-        transition: 'opacity 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+        background: isMounted ? 'rgba(0, 0, 0, 0.6)' : 'rgba(0, 0, 0, 0)',
+        backdropFilter: isMounted ? 'blur(24px)' : 'blur(0px)',
+        WebkitBackdropFilter: isMounted ? 'blur(24px)' : 'blur(0px)',
+        transition: 'all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
       }}
     >
       <div

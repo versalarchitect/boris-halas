@@ -411,13 +411,25 @@ export default function AdminPage() {
     <div
       className="fixed inset-0 z-[90] flex items-center justify-center"
       style={{
-        background: '#000',
-        opacity: isMounted ? 1 : 0,
-        transition: 'opacity 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+        background: isMounted ? 'rgba(0, 0, 0, 0.6)' : 'rgba(0, 0, 0, 0)',
+        backdropFilter: isMounted ? 'blur(24px)' : 'blur(0px)',
+        WebkitBackdropFilter: isMounted ? 'blur(24px)' : 'blur(0px)',
+        transition: 'all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
       }}
     >
+    {/* Close button */}
+    <a
+      href="/"
+      className="absolute top-5 right-5 w-10 h-10 flex items-center justify-center rounded-full text-white/70 hover:text-white hover:bg-white/10 transition-all duration-300 z-[91]"
+      title="Close CMS"
+    >
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
+        <line x1="18" y1="6" x2="6" y2="18" />
+        <line x1="6" y1="6" x2="18" y2="18" />
+      </svg>
+    </a>
     <div
-      className="bg-white text-black flex overflow-hidden"
+      className="relative bg-white text-black flex overflow-hidden"
       style={{
         width: 'calc(100vw - 48px)',
         height: 'calc(100vh - 48px)',
