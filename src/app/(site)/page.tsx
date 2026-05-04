@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import { HorizontalGallery } from "@/components/horizontal-gallery";
 import { getGalleryImages } from "@/lib/gallery";
 
