@@ -23,9 +23,14 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'No category provided' }, { status: 400 });
     }
 
+    const validCategories = ['around', 'fashion', 'editorial', 'music', 'somewhere'];
+    if (!validCategories.includes(category)) {
+      return NextResponse.json({ error: `Invalid category. Must be one of: ${validCategories.join(', ')}` }, { status: 400 });
+    }
+
     const width = widthStr ? parseInt(widthStr, 10) : 2000;
     const height = heightStr ? parseInt(heightStr, 10) : 3000;
-    const filename = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
+    const filename = file.name.replace(/[^a-zA-Z0-9._-]/g, '_').slice(0, 200);
     const storagePath = `gallery/${category}/${filename}`;
 
     const { error: uploadError } = await supabase.storage

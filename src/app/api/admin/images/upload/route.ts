@@ -19,7 +19,8 @@ export async function POST(request: NextRequest) {
     }
 
     const client = supabase;
-    const storagePath = `${productId}/${file.name}`;
+    const sanitized = file.name.replace(/[^a-zA-Z0-9._-]/g, '_').slice(0, 200);
+    const storagePath = `${productId}/${sanitized}`;
 
     // Upload to storage
     const { error: uploadError } = await client.storage
@@ -52,7 +53,7 @@ export async function POST(request: NextRequest) {
       .from('bh_product_images')
       .upsert({
         product_id: productId,
-        filename: file.name,
+        filename: sanitized,
         storage_path: storagePath,
         url,
         sort_order: nextSortOrder,
@@ -61,7 +62,10 @@ export async function POST(request: NextRequest) {
       .single();
 
     if (insertError) {
-      return NextResponse.json({ error: insertError.message }, { status: 500 });
+      const msg = insertError.message.includes('foreign key')
+        ? `Product "${productId}" does not exist`
+        : insertError.message;
+      return NextResponse.json({ error: msg }, { status: 400 });
     }
 
     return NextResponse.json({
