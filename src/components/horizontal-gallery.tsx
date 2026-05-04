@@ -51,13 +51,13 @@ export function HorizontalGallery({ images }: HorizontalGalleryProps) {
   return (
     <div
       ref={containerRef}
-      className="flex h-full gap-[3px] overflow-x-auto overflow-y-hidden px-[3px] scrollbar-hide md:px-0 snap-x snap-mandatory md:snap-none touch-action-pan-x"
+      className="flex h-full gap-[3px] overflow-x-auto overflow-y-hidden scrollbar-hide snap-x snap-mandatory md:snap-none touch-action-pan-x"
       style={{ WebkitOverflowScrolling: "touch", willChange: "transform" }}
     >
       {images.map((image, index) => (
         <div
           key={index}
-          className="relative h-full flex-shrink-0 snap-start min-w-[85vw] md:min-w-0"
+          className="relative h-full flex-shrink-0 snap-start"
         >
           <Image
             src={image.src}
