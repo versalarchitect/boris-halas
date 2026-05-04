@@ -457,17 +457,36 @@ export default function AdminPage() {
         transition: 'all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
       }}
     >
-    {/* Close button */}
-    <a
-      href="/"
-      className="absolute top-3 right-3 w-10 h-10 flex items-center justify-center rounded-full bg-white/20 text-white hover:bg-white hover:text-black transition-all duration-300 z-[91]"
-      title="Close CMS"
+    {/* Close & Save button */}
+    <button
+      onClick={async () => {
+        if (unsavedChanges.size > 0) {
+          try {
+            const res = await apiFetch('/api/admin/products', {
+              method: 'PUT',
+              headers: { 'Content-Type': 'application/json', 'x-admin-token': authToken ?? '' },
+              body: JSON.stringify(products),
+            });
+            if (!res.ok) {
+              addToast('error', 'Failed to save — changes not applied');
+              return;
+            }
+          } catch {
+            addToast('error', 'Connection error — changes not saved');
+            return;
+          }
+        }
+        window.location.href = '/';
+      }}
+      className="absolute top-3 right-3 flex items-center gap-2 px-4 h-10 rounded-full bg-white/20 text-white text-[11px] tracking-[0.1em] uppercase hover:bg-white hover:text-black transition-all duration-300 z-[91]"
+      title="Save all changes and close CMS"
     >
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
+      <span>Close</span>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
         <line x1="18" y1="6" x2="6" y2="18" />
         <line x1="6" y1="6" x2="18" y2="18" />
       </svg>
-    </a>
+    </button>
     <div
       className="relative bg-white text-black flex overflow-hidden"
       style={{
