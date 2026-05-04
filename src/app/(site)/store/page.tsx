@@ -16,14 +16,14 @@ export default async function StorePage() {
           <Link
             key={product.id}
             href={`/store/${product.id}`}
-            className="group relative flex h-full flex-shrink-0 snap-start flex-col overflow-hidden font-hn"
+            className="group relative h-full flex-shrink-0 snap-start font-hn"
           >
-            <div className="relative min-h-0 flex-1 overflow-hidden">
+            <div className="relative h-full">
               <Image
                 src={resolveProductImageSrc(product.id, cover)}
                 alt={product.title}
-                width={600}
-                height={900}
+                width={cover.width}
+                height={cover.height}
                 className="h-full w-auto transition-opacity duration-500 group-hover:opacity-90"
                 sizes="(max-width: 640px) 60vw, (max-width: 768px) 40vw, (max-width: 1024px) 28vw, 22vw"
                 priority={i === 0}
@@ -34,16 +34,11 @@ export default async function StorePage() {
                   Sold out
                 </span>
               )}
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-[12px] font-bold leading-[1.5] text-black">
-                {product.title}
-              </span>
-              {!isSoldOut && (
-                <span className="text-[11px] leading-[1.5] text-[#888]">
-                  €{product.price}
+              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-white/90 to-transparent pt-6 pb-1">
+                <span className="text-[12px] font-bold leading-[1.5] text-black">
+                  {product.title}
                 </span>
-              )}
+              </div>
             </div>
           </Link>
         );
