@@ -1,14 +1,16 @@
 'use client';
 
-import { useState, useCallback, useRef, useEffect } from 'react';
-import PasswordGate from './components/PasswordGate';
-import SortableProductGrid from './components/SortableProductGrid';
-import ProductEditor from './components/ProductEditor';
-import GalleryManager from './components/GalleryManager';
-import InfoManager from './components/InfoManager';
-import InquiryManager from './components/InquiryManager';
-import Toast, { type ToastMessage } from './components/Toast';
-import type { GalleryImage } from './components/GalleryManager';
+import { useState, useCallback, useRef, useEffect, use } from 'react';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import PasswordGate from '../components/PasswordGate';
+import SortableProductGrid from '../components/SortableProductGrid';
+import ProductEditor from '../components/ProductEditor';
+import GalleryManager from '../components/GalleryManager';
+import InfoManager from '../components/InfoManager';
+import InquiryManager from '../components/InquiryManager';
+import Toast, { type ToastMessage } from '../components/Toast';
+import type { GalleryImage } from '../components/GalleryManager';
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                              */
@@ -74,7 +76,11 @@ function newProductTemplate(sortOrder: number): AdminProduct {
 /*  Main Admin Page                                                    */
 /* ------------------------------------------------------------------ */
 
-export default function AdminPage() {
+export default function AdminPage({ params }: { params: Promise<{ section?: string[] }> }) {
+  const { section } = use(params);
+  const activeSection = section?.[0] ?? 'store';
+  const router = useRouter();
+
   /* Auth state */
   const [authToken, setAuthToken] = useState<string | null>(null);
 
@@ -89,9 +95,6 @@ export default function AdminPage() {
   const [isSeeding, setIsSeeding] = useState(false);
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
   const [isMounted, setIsMounted] = useState(false);
-
-  /* Section navigation */
-  const [activeSection, setActiveSection] = useState<string>('store');
 
   /* Gallery state */
   const [galleryImages, setGalleryImages] = useState<GalleryImage[]>([]);
@@ -520,19 +523,19 @@ export default function AdminPage() {
           </span>
 
           <nav className="flex flex-col gap-1">
-            {navSections.map((section) => (
-              <button
-                key={section.key}
-                onClick={() => setActiveSection(section.key)}
-                className="text-[13px] py-1 text-left hover:text-black transition-colors duration-200"
+            {navSections.map((s) => (
+              <Link
+                key={s.key}
+                href={`/admin/${s.key}`}
+                className="text-[13px] py-1 text-left hover:text-black transition-colors duration-200 block"
                 style={{
-                  fontWeight: activeSection === section.key ? 600 : 300,
-                  color: activeSection === section.key ? '#000' : '#999',
+                  fontWeight: activeSection === s.key ? 600 : 300,
+                  color: activeSection === s.key ? '#000' : '#999',
                   letterSpacing: '0.02em',
                 }}
               >
-                {section.label}
-              </button>
+                {s.label}
+              </Link>
             ))}
           </nav>
         </div>

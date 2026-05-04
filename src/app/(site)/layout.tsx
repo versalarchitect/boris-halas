@@ -17,11 +17,11 @@ const siteUrl = "https://borishalas.com";
 
 export const metadata: Metadata = {
   title: "Boris Halas Photography",
-  description: " ",
+  description: "Photography, creative direction and original products by Boris Halas. Based in Montréal.",
   metadataBase: new URL(siteUrl),
   openGraph: {
     title: "Boris Halas Photography",
-    description: " ",
+    description: "Photography, creative direction and original products by Boris Halas. Based in Montréal.",
     url: siteUrl,
     siteName: "Boris Halas Photography",
     images: [
@@ -38,7 +38,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Boris Halas Photography",
-    description: " ",
+    description: "Photography, creative direction and original products by Boris Halas. Based in Montréal.",
     images: ["/og-image.jpg"],
   },
 };
