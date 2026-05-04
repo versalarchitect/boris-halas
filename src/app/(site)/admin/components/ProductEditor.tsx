@@ -238,6 +238,7 @@ export default function ProductEditor({
   onImageUpload,
   onImageDelete,
   onImageReorder,
+  authToken,
 }: ProductEditorProps) {
   const [product, setProduct] = useState<AdminProduct>(initialProduct);
   const [isUploading, setIsUploading] = useState(false);
@@ -267,13 +268,44 @@ export default function ProductEditor({
     setProduct(initialProduct);
   }, [initialProduct]);
 
+  const [isSaving, setIsSaving] = useState(false);
+  const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
+
+  const handleSaveAndClose = useCallback(async () => {
+    setIsSaving(true);
+    setSaveStatus('saving');
+    try {
+      const res = await fetch('/api/admin/products', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-admin-token': authToken,
+        },
+        body: JSON.stringify([product]),
+      });
+      if (res.ok) {
+        setSaveStatus('saved');
+        onSave(product);
+        setTimeout(() => {
+          setIsClosing(true);
+          setTimeout(() => onClose(), 400);
+        }, 600);
+      } else {
+        const data = await res.json().catch(() => ({}));
+        setSaveStatus('error');
+        alert(data.error || 'Failed to save. Please try again.');
+        setIsSaving(false);
+      }
+    } catch {
+      setSaveStatus('error');
+      alert('Connection error. Please check your network and try again.');
+      setIsSaving(false);
+    }
+  }, [product, authToken, onSave, onClose]);
+
   const handleClose = useCallback(() => {
-    setIsClosing(true);
-    setTimeout(() => {
-      onSave(product);
-      onClose();
-    }, 400);
-  }, [onClose, onSave, product]);
+    handleSaveAndClose();
+  }, [handleSaveAndClose]);
 
   const handleBackdropClick = useCallback(
     (e: React.MouseEvent) => {
@@ -706,10 +738,19 @@ export default function ProductEditor({
         {/* Footer */}
         <div className="sticky bottom-0 bg-white border-t border-gray-100 px-8 py-5">
           <button
-            onClick={handleClose}
-            className="minimal-button w-full px-8 py-3.5 text-xs tracking-[0.15em] uppercase"
+            onClick={handleSaveAndClose}
+            disabled={isSaving}
+            className="w-full px-8 py-3.5 text-xs tracking-[0.15em] uppercase transition-all duration-300"
+            style={{
+              background: saveStatus === 'saved' ? '#000' : saveStatus === 'error' ? '#dc2626' : 'transparent',
+              color: saveStatus === 'saved' || saveStatus === 'error' ? '#fff' : '#000',
+              border: '1px solid',
+              borderColor: saveStatus === 'saved' ? '#000' : saveStatus === 'error' ? '#dc2626' : '#000',
+              opacity: isSaving && saveStatus === 'saving' ? 0.6 : 1,
+              cursor: isSaving ? 'wait' : 'pointer',
+            }}
           >
-            Done
+            {saveStatus === 'saving' ? 'Saving...' : saveStatus === 'saved' ? 'Saved' : saveStatus === 'error' ? 'Error — Try Again' : 'Save & Close'}
           </button>
         </div>
       </div>
