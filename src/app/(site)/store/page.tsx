@@ -16,14 +16,15 @@ export default async function StorePage() {
           <Link
             key={product.id}
             href={`/store/${product.id}`}
-            className="group relative flex h-full w-[60vw] max-w-[360px] flex-shrink-0 snap-start flex-col font-hn sm:w-[40vw] md:w-[28vw] lg:w-[22vw]"
+            className="group relative flex h-full flex-shrink-0 snap-start flex-col overflow-hidden font-hn"
           >
             <div className="relative min-h-0 flex-1 overflow-hidden">
               <Image
                 src={resolveProductImageSrc(product.id, cover)}
                 alt={product.title}
-                fill
-                className="object-contain transition-opacity duration-500 group-hover:opacity-90"
+                width={600}
+                height={900}
+                className="h-full w-auto transition-opacity duration-500 group-hover:opacity-90"
                 sizes="(max-width: 640px) 60vw, (max-width: 768px) 40vw, (max-width: 1024px) 28vw, 22vw"
                 priority={i === 0}
                 quality={85}
@@ -34,7 +35,7 @@ export default async function StorePage() {
                 </span>
               )}
             </div>
-            <div className="mt-1 flex items-center justify-between">
+            <div className="flex items-center justify-between">
               <span className="text-[12px] font-bold leading-[1.5] text-black">
                 {product.title}
               </span>

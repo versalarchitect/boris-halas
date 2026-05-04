@@ -46,5 +46,8 @@ Screenshots of every page at desktop (1920x1080) and mobile (390x844 iPhone) are
 
 When in doubt, open the screenshot. If localhost:3001 doesn't match, it's wrong.
 
+### Store layout rule:
+The distance (gap) between product images/cards must be the same on mobile and desktop for consistency. Do not use different gap values at different breakpoints.
+
 ### CMS rule:
 The CMS replaces hardcoded data with dynamic data. It does NOT change any frontend layout, CSS, component structure, or visual behavior. If a CMS feature would require altering the frontend, flag it instead of changing it.
