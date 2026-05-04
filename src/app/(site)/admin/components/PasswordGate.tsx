@@ -47,13 +47,21 @@ export default function PasswordGate({ onAuthenticated }: PasswordGateProps) {
   };
 
   return (
-    <div className="min-h-screen bg-white flex items-center justify-center">
+    <div
+      className="fixed inset-0 z-[100] flex items-center justify-center"
+      style={{
+        background: isMounted ? 'rgba(255, 255, 255, 0.92)' : 'rgba(255, 255, 255, 0)',
+        backdropFilter: isMounted ? 'blur(20px)' : 'blur(0px)',
+        WebkitBackdropFilter: isMounted ? 'blur(20px)' : 'blur(0px)',
+        transition: 'all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+      }}
+    >
       <div
         className="w-full max-w-sm px-8 text-center"
         style={{
           opacity: isMounted ? 1 : 0,
-          transform: isMounted ? 'translateY(0)' : 'translateY(24px)',
-          transition: 'all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+          transform: isMounted ? 'translateY(0) scale(1)' : 'translateY(16px) scale(0.98)',
+          transition: 'all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
         }}
       >
         {/* Logo */}
