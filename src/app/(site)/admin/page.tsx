@@ -460,7 +460,7 @@ export default function AdminPage() {
     {/* Close button */}
     <a
       href="/"
-      className="absolute top-5 right-5 w-10 h-10 flex items-center justify-center rounded-full text-white/70 hover:text-white hover:bg-white/10 transition-all duration-300 z-[91]"
+      className="absolute top-3 right-3 w-10 h-10 flex items-center justify-center rounded-full bg-white/20 text-white hover:bg-white hover:text-black transition-all duration-300 z-[91]"
       title="Close CMS"
     >
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
