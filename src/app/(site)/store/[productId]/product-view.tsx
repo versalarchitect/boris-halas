@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import type { Product } from "@/lib/products";
+import { type Product, resolveProductImageSrc } from "@/lib/products";
 import { Lightbox, type LightboxItem } from "./lightbox";
 
 interface ProductViewProps {
@@ -23,6 +23,7 @@ export function ProductView({ product }: ProductViewProps) {
       product.images.map((image) => ({
         productId: product.id,
         image: image.src,
+        resolvedSrc: resolveProductImageSrc(product.id, image),
         width: image.width,
         height: image.height,
         title: product.title,
@@ -53,7 +54,7 @@ export function ProductView({ product }: ProductViewProps) {
           >
             <Image
               key={`${product.id}-${current.src}`}
-              src={`/products/${product.id}/${current.src}`}
+              src={resolveProductImageSrc(product.id, current)}
               alt={`${product.title} — image ${activeIndex + 1}`}
               width={current.width}
               height={current.height}
@@ -101,7 +102,7 @@ export function ProductView({ product }: ProductViewProps) {
                 }`}
               >
                 <Image
-                  src={`/products/${product.id}/${img.src}`}
+                  src={resolveProductImageSrc(product.id, img)}
                   alt=""
                   fill
                   sizes="56px"

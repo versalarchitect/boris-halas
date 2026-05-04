@@ -7,6 +7,7 @@ import { ChevronLeft, ChevronRight, X } from "lucide-react";
 export interface LightboxItem {
   productId: string;
   image: string;
+  resolvedSrc: string;
   width: number;
   height: number;
   title: string;
@@ -104,7 +105,7 @@ export function Lightbox({ items, startIndex, onClose }: LightboxProps) {
         >
           <Image
             key={`${current.productId}/${current.image}`}
-            src={`/products/${current.productId}/${current.image}`}
+            src={current.resolvedSrc}
             alt={current.title}
             width={current.width}
             height={current.height}

@@ -2,8 +2,14 @@ import { supabase } from './supabase';
 
 export interface ProductImage {
   src: string;
+  url?: string;
   width: number;
   height: number;
+}
+
+export function resolveProductImageSrc(productId: string, image: ProductImage): string {
+  if (image.url) return image.url;
+  return `/products/${productId}/${image.src}`;
 }
 
 export interface Product {
@@ -280,7 +286,7 @@ export async function getProducts(): Promise<Product[]> {
     const productIds = rows.map((r: Record<string, unknown>) => r.id as string);
     const { data: imageRows, error: imgError } = await supabase
       .from('bh_product_images')
-      .select('product_id, filename, sort_order')
+      .select('product_id, filename, url, sort_order')
       .in('product_id', productIds)
       .order('sort_order', { ascending: true });
 
@@ -292,9 +298,10 @@ export async function getProducts(): Promise<Product[]> {
     for (const img of imageRows ?? []) {
       const pid = img.product_id as string;
       const filename = img.filename as string;
+      const url = img.url as string | undefined;
       if (!imagesByProduct[pid]) imagesByProduct[pid] = [];
       const dims = resolveImageDimensions(pid, filename);
-      imagesByProduct[pid].push({ src: filename, ...dims });
+      imagesByProduct[pid].push({ src: filename, url, ...dims });
     }
 
     return rows.map((row: Record<string, unknown>) =>
@@ -321,7 +328,7 @@ export async function getProductById(id: string): Promise<Product | undefined> {
 
     const { data: imageRows, error: imgError } = await supabase
       .from('bh_product_images')
-      .select('filename, sort_order')
+      .select('filename, url, sort_order')
       .eq('product_id', id)
       .order('sort_order', { ascending: true });
 
@@ -332,8 +339,9 @@ export async function getProductById(id: string): Promise<Product | undefined> {
     const images: ProductImage[] = (imageRows ?? []).map(
       (img: Record<string, unknown>) => {
         const filename = img.filename as string;
+        const url = img.url as string | undefined;
         const dims = resolveImageDimensions(id, filename);
-        return { src: filename, ...dims };
+        return { src: filename, url, ...dims };
       }
     );
 

@@ -2,7 +2,7 @@ export const dynamic = 'force-dynamic';
 
 import Image from "next/image";
 import Link from "next/link";
-import { getProducts } from "@/lib/products";
+import { getProducts, resolveProductImageSrc } from "@/lib/products";
 import { StoreScroller } from "./store-scroller";
 
 export default async function StorePage() {
@@ -20,7 +20,7 @@ export default async function StorePage() {
           >
             <div className="relative min-h-0 flex-1 overflow-hidden">
               <Image
-                src={`/products/${product.id}/${cover.src}`}
+                src={resolveProductImageSrc(product.id, cover)}
                 alt={product.title}
                 fill
                 className="object-contain transition-opacity duration-500 group-hover:opacity-90"
