@@ -38,9 +38,11 @@ export default async function StorePage() {
               <span className="text-[12px] font-bold leading-[1.5] text-black">
                 {product.title}
               </span>
-              <span className="text-[11px] leading-[1.5] text-[#888]">
-                {isSoldOut ? "—" : `€${product.price}`}
-              </span>
+              {!isSoldOut && (
+                <span className="text-[11px] leading-[1.5] text-[#888]">
+                  €{product.price}
+                </span>
+              )}
             </div>
           </Link>
         );
