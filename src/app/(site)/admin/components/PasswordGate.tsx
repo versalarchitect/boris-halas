@@ -50,21 +50,20 @@ export default function PasswordGate({ onAuthenticated }: PasswordGateProps) {
     <div
       className="fixed inset-0 z-[100] flex items-center justify-center"
       style={{
-        background: isMounted ? 'rgba(255, 255, 255, 0.92)' : 'rgba(255, 255, 255, 0)',
-        backdropFilter: isMounted ? 'blur(20px)' : 'blur(0px)',
-        WebkitBackdropFilter: isMounted ? 'blur(20px)' : 'blur(0px)',
-        transition: 'all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+        background: '#000',
+        opacity: isMounted ? 1 : 0,
+        transition: 'opacity 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
       }}
     >
       <div
-        className="w-full max-w-sm px-8 text-center"
+        className="w-full max-w-[420px] mx-4 bg-white px-12 py-14 text-center"
         style={{
           opacity: isMounted ? 1 : 0,
-          transform: isMounted ? 'translateY(0) scale(1)' : 'translateY(16px) scale(0.98)',
-          transition: 'all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+          transform: isMounted ? 'translateY(0) scale(1)' : 'translateY(20px) scale(0.96)',
+          transition: 'all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.15s',
+          boxShadow: '0 25px 80px rgba(0, 0, 0, 0.5)',
         }}
       >
-        {/* Logo */}
         <h1
           className="text-2xl font-light tracking-[0.3em] text-black mb-2"
           style={{ letterSpacing: '0.3em' }}
