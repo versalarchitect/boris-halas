@@ -29,12 +29,12 @@ export default async function StorePage() {
                 quality={85}
               />
               {isSoldOut && (
-                <span className="absolute left-3 top-3 bg-black px-2 py-1 text-[10px] font-semibold uppercase tracking-wider text-white">
+                <span className="absolute left-0 top-0 bg-black px-2 py-1 text-[10px] font-semibold uppercase tracking-wider text-white">
                   Sold out
                 </span>
               )}
             </div>
-            <div className="mt-2 flex items-center justify-between gap-2 px-1">
+            <div className="mt-1 flex items-center justify-between">
               <span className="text-[12px] font-bold leading-[1.5] text-black">
                 {product.title}
               </span>
