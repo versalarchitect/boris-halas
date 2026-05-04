@@ -62,7 +62,8 @@ export async function POST(request: NextRequest) {
 
       // Upload each image
       for (let j = 0; j < product.images.length; j++) {
-        const filename = product.images[j];
+        const img = product.images[j];
+        const filename = typeof img === 'string' ? img : img.src;
         const filePath = path.join(process.cwd(), 'public', 'products', product.id, filename);
 
         if (!fs.existsSync(filePath)) {
