@@ -1,10 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { revalidatePath } from 'next/cache';
-import { supabase } from '@/lib/supabase';
+import { supabase, STORAGE_BUCKET } from '@/lib/supabase';
 import { checkAdminAuth } from '../../auth-check';
-import sharp from 'sharp';
-import path from 'path';
-import { writeFile, mkdir } from 'fs/promises';
 
 export async function POST(request: NextRequest) {
   const authError = checkAdminAuth(request);
@@ -15,6 +12,8 @@ export async function POST(request: NextRequest) {
     const file = formData.get('file') as File | null;
     const category = formData.get('category') as string | null;
     const alt = (formData.get('alt') as string) || '';
+    const widthStr = formData.get('width') as string | null;
+    const heightStr = formData.get('height') as string | null;
 
     if (!file) {
       return NextResponse.json({ error: 'No file provided' }, { status: 400 });
@@ -24,17 +23,22 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'No category provided' }, { status: 400 });
     }
 
-    // Read file buffer and get dimensions
-    const buffer = Buffer.from(await file.arrayBuffer());
-    const metadata = await sharp(buffer).metadata();
-    const width = metadata.width ?? 0;
-    const height = metadata.height ?? 0;
-
-    // Save file to /public/{category}/
+    const width = widthStr ? parseInt(widthStr, 10) : 2000;
+    const height = heightStr ? parseInt(heightStr, 10) : 3000;
     const filename = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
-    const dir = path.join(process.cwd(), 'public', category);
-    await mkdir(dir, { recursive: true });
-    await writeFile(path.join(dir, filename), buffer);
+    const storagePath = `gallery/${category}/${filename}`;
+
+    const { error: uploadError } = await supabase.storage
+      .from(STORAGE_BUCKET)
+      .upload(storagePath, file, { contentType: file.type, upsert: true });
+
+    if (uploadError) {
+      return NextResponse.json({ error: uploadError.message }, { status: 500 });
+    }
+
+    const { data: { publicUrl } } = supabase.storage
+      .from(STORAGE_BUCKET)
+      .getPublicUrl(storagePath);
 
     // Determine next sort_order for this category
     const { data: existing, error: orderError } = await supabase
@@ -55,7 +59,7 @@ export async function POST(request: NextRequest) {
       .from('bh_gallery_images')
       .insert({
         category,
-        src: `/${category}/${filename}`,
+        src: publicUrl,
         alt,
         width,
         height,
