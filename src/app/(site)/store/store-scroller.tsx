@@ -42,7 +42,8 @@ export function StoreScroller({ children }: StoreScrollerProps) {
   return (
     <div
       ref={containerRef}
-      className="flex h-full items-stretch gap-2 overflow-x-auto overflow-y-hidden px-[3px] pb-2 scrollbar-hide md:gap-3 md:px-0"
+      style={{ touchAction: "pan-x" }}
+      className="flex h-full snap-x snap-mandatory items-stretch gap-2 overflow-x-auto overflow-y-hidden px-[3px] pb-2 scrollbar-hide md:snap-none md:gap-3 md:px-0"
     >
       {children}
     </div>

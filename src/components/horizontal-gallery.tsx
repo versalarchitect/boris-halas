@@ -51,12 +51,13 @@ export function HorizontalGallery({ images }: HorizontalGalleryProps) {
   return (
     <div
       ref={containerRef}
-      className="flex h-full gap-[3px] overflow-x-auto overflow-y-hidden px-[3px] scrollbar-hide md:px-0"
+      className="flex h-full gap-[3px] overflow-x-auto overflow-y-hidden px-[3px] scrollbar-hide md:px-0 snap-x snap-mandatory md:snap-none touch-action-pan-x"
+      style={{ WebkitOverflowScrolling: "touch", willChange: "transform" }}
     >
       {images.map((image, index) => (
         <div
           key={index}
-          className="relative h-full flex-shrink-0"
+          className="relative h-full flex-shrink-0 snap-start min-w-[85vw] md:min-w-0"
         >
           <Image
             src={image.src}
@@ -65,7 +66,9 @@ export function HorizontalGallery({ images }: HorizontalGalleryProps) {
             height={image.height}
             className="h-full w-auto"
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 75vw, (max-width: 1536px) 50vw, 33vw"
-            priority={index < 3}
+            priority={index === 0}
+            loading={index === 0 ? "eager" : "lazy"}
+            fetchPriority={index === 0 ? "high" : "auto"}
             quality={85}
           />
           {image.caption && (

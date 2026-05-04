@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Sidebar } from "@/components/sidebar";
@@ -43,6 +43,13 @@ export const metadata: Metadata = {
   },
 };
 
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  viewportFit: 'cover',
+  themeColor: '#ffffff',
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -53,8 +60,8 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased overflow-hidden`}
       >
-        <div className="flex h-screen w-screen items-center bg-white">
-          <div className="flex h-[70vh] w-full md:h-[55vh]">
+        <div className="flex h-dvh w-dvw items-center bg-white">
+          <div className="flex h-[70dvh] w-full md:h-[55dvh]">
             <Sidebar />
             <main className="flex-1 overflow-hidden">
               {children}

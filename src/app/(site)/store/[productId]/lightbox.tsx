@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, type TouchEvent } from "react";
 import Image from "next/image";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
 
@@ -24,6 +24,8 @@ export function Lightbox({ items, startIndex, onClose }: LightboxProps) {
   const [zoomed, setZoomed] = useState(false);
   const [origin, setOrigin] = useState({ x: 50, y: 50 });
   const frameRef = useRef<HTMLDivElement>(null);
+  const touchStartX = useRef<number | null>(null);
+  const touchEndX = useRef<number | null>(null);
 
   const current = items[index];
 
@@ -78,6 +80,26 @@ export function Lightbox({ items, startIndex, onClose }: LightboxProps) {
     setZoomed((v) => !v);
   };
 
+  const handleTouchStart = (e: TouchEvent<HTMLDivElement>) => {
+    touchStartX.current = e.touches[0].clientX;
+    touchEndX.current = null;
+  };
+
+  const handleTouchMove = (e: TouchEvent<HTMLDivElement>) => {
+    touchEndX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = () => {
+    if (touchStartX.current === null || touchEndX.current === null) return;
+    const distance = touchStartX.current - touchEndX.current;
+    if (Math.abs(distance) > 50) {
+      if (distance > 0) next();
+      else prev();
+    }
+    touchStartX.current = null;
+    touchEndX.current = null;
+  };
+
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center font-hn">
       <button
@@ -92,7 +114,11 @@ export function Lightbox({ items, startIndex, onClose }: LightboxProps) {
         ref={frameRef}
         onClick={toggleZoom}
         onMouseMove={handleMove}
-        className={`relative z-10 flex h-[88vh] w-[92vw] items-center justify-center overflow-hidden ${
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+        style={{ touchAction: "pan-y" }}
+        className={`relative z-10 flex h-[88dvh] w-[92dvw] items-center justify-center overflow-hidden ${
           zoomed ? "cursor-zoom-out" : "cursor-zoom-in"
         }`}
       >
@@ -122,7 +148,8 @@ export function Lightbox({ items, startIndex, onClose }: LightboxProps) {
         type="button"
         aria-label="Close"
         onClick={onClose}
-        className="absolute right-4 top-4 z-20 flex h-10 w-10 cursor-pointer items-center justify-center text-black/70 transition-colors hover:text-black"
+        className="absolute right-4 z-20 flex min-h-[44px] min-w-[44px] cursor-pointer items-center justify-center text-black/70 transition-colors hover:text-black"
+        style={{ top: 'max(1rem, env(safe-area-inset-top, 1rem))' }}
       >
         <X className="h-6 w-6" strokeWidth={2} />
       </button>
@@ -135,7 +162,7 @@ export function Lightbox({ items, startIndex, onClose }: LightboxProps) {
           e.stopPropagation();
           prev();
         }}
-        className="absolute left-4 top-1/2 z-20 flex h-10 w-10 -translate-y-1/2 cursor-pointer items-center justify-center text-black/70 transition-colors hover:text-black"
+        className="absolute left-4 top-1/2 z-20 flex min-h-[44px] min-w-[44px] -translate-y-1/2 cursor-pointer items-center justify-center text-black/70 transition-colors hover:text-black"
       >
         <ChevronLeft className="h-6 w-6" strokeWidth={2} />
       </button>
@@ -148,7 +175,7 @@ export function Lightbox({ items, startIndex, onClose }: LightboxProps) {
           e.stopPropagation();
           next();
         }}
-        className="absolute right-4 top-1/2 z-20 flex h-10 w-10 -translate-y-1/2 cursor-pointer items-center justify-center text-black/70 transition-colors hover:text-black"
+        className="absolute right-4 top-1/2 z-20 flex min-h-[44px] min-w-[44px] -translate-y-1/2 cursor-pointer items-center justify-center text-black/70 transition-colors hover:text-black"
       >
         <ChevronRight className="h-6 w-6" strokeWidth={2} />
       </button>

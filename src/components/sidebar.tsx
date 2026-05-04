@@ -47,7 +47,7 @@ export function Sidebar() {
 
 function MobileHeader({ onOpen }: { onOpen: () => void }) {
   return (
-    <div className="fixed left-0 top-0 z-[60] flex w-full items-center justify-between px-4 py-2 md:hidden">
+    <div className="fixed left-0 top-0 z-[60] flex w-full items-center justify-between bg-white/90 backdrop-blur-sm px-4 py-2 pt-[env(safe-area-inset-top)] md:hidden">
       <Link href="/" aria-label="Home">
         <Logo />
       </Link>
@@ -76,7 +76,7 @@ function MobileMenu({
 }) {
   return (
     <div
-      className={`fixed inset-0 z-50 flex h-screen w-screen flex-col bg-white font-hn transition-opacity duration-300 md:hidden ${
+      className={`fixed inset-0 z-50 flex h-[100dvh] w-[100dvw] flex-col bg-white pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)] font-hn transition-opacity duration-300 md:hidden ${
         open ? "opacity-100" : "pointer-events-none opacity-0"
       }`}
     >

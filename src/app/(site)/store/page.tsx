@@ -16,7 +16,7 @@ export default async function StorePage() {
           <Link
             key={product.id}
             href={`/store/${product.id}`}
-            className="group relative flex h-full w-[60vw] max-w-[360px] flex-shrink-0 flex-col font-hn sm:w-[40vw] md:w-[28vw] lg:w-[22vw]"
+            className="group relative flex h-full w-[60vw] max-w-[360px] flex-shrink-0 snap-start flex-col font-hn sm:w-[40vw] md:w-[28vw] lg:w-[22vw]"
           >
             <div className="relative min-h-0 flex-1 overflow-hidden">
               <Image
