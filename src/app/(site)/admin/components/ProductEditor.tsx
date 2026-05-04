@@ -256,7 +256,6 @@ export default function ProductEditor({
 
   useEffect(() => {
     requestAnimationFrame(() => setIsVisible(true));
-    // Lock body scroll
     document.body.style.overflow = 'hidden';
     return () => {
       document.body.style.overflow = '';
@@ -306,6 +305,14 @@ export default function ProductEditor({
   const handleClose = useCallback(() => {
     handleSaveAndClose();
   }, [handleSaveAndClose]);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [onClose]);
 
   const handleBackdropClick = useCallback(
     (e: React.MouseEvent) => {

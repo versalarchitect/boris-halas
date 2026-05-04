@@ -424,6 +424,21 @@ export default function AdminPage({ params }: { params: Promise<{ section?: stri
   }, [apiFetch, addToast, loadProducts]);
 
   /* ---------------------------------------------------------------- */
+  /*  Escape key to close CMS                                          */
+  /* ---------------------------------------------------------------- */
+
+  useEffect(() => {
+    if (!authToken) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && !editingProductId) {
+        window.location.href = '/';
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [authToken, editingProductId]);
+
+  /* ---------------------------------------------------------------- */
   /*  Render: Password Gate                                            */
   /* ---------------------------------------------------------------- */
 
