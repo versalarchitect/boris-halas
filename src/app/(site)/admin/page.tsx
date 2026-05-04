@@ -6,6 +6,7 @@ import SortableProductGrid from './components/SortableProductGrid';
 import ProductEditor from './components/ProductEditor';
 import GalleryManager from './components/GalleryManager';
 import InfoManager from './components/InfoManager';
+import InquiryManager from './components/InquiryManager';
 import Toast, { type ToastMessage } from './components/Toast';
 import type { GalleryImage } from './components/GalleryManager';
 
@@ -445,6 +446,7 @@ export default function AdminPage() {
     { label: 'Somewhere', key: 'somewhere' },
     { label: 'Store', key: 'store' },
     { label: 'Info', key: 'info' },
+    { label: 'Inquiries', key: 'inquiries' },
   ];
 
   return (
@@ -652,6 +654,10 @@ export default function AdminPage() {
 
           {activeSection === 'info' && (
             <InfoManager authToken={authToken} />
+          )}
+
+          {activeSection === 'inquiries' && (
+            <InquiryManager authToken={authToken} />
           )}
         </section>
 

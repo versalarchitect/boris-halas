@@ -14,6 +14,11 @@ interface ProductViewProps {
 export function ProductView({ product }: ProductViewProps) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [showInquiryForm, setShowInquiryForm] = useState(false);
+  const [inquiryName, setInquiryName] = useState("");
+  const [inquiryEmail, setInquiryEmail] = useState("");
+  const [inquiryMessage, setInquiryMessage] = useState("");
+  const [inquiryStatus, setInquiryStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
   const isSoldOut = product.status === "sold-out";
   const current = product.images[activeIndex];
   const hasMany = product.images.length > 1;
@@ -35,9 +40,29 @@ export function ProductView({ product }: ProductViewProps) {
     setActiveIndex((i) => (i === 0 ? product.images.length - 1 : i - 1));
   const next = () => setActiveIndex((i) => (i + 1) % product.images.length);
 
-  const handleInquire = () => {
-    const subject = encodeURIComponent(`Inquiry — ${product.title}`);
-    window.location.href = `mailto:borishalasphoto@gmail.com?subject=${subject}`;
+  const handleInquireSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setInquiryStatus("sending");
+    try {
+      const res = await fetch("/api/inquiries", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          productId: product.id,
+          productTitle: product.title,
+          name: inquiryName,
+          email: inquiryEmail,
+          message: inquiryMessage,
+        }),
+      });
+      if (res.ok) {
+        setInquiryStatus("sent");
+      } else {
+        setInquiryStatus("error");
+      }
+    } catch {
+      setInquiryStatus("error");
+    }
   };
 
   return (
@@ -156,18 +181,72 @@ export function ProductView({ product }: ProductViewProps) {
           {product.description}
         </p>
 
-        <button
-          type="button"
-          onClick={handleInquire}
-          disabled={isSoldOut}
-          className={`w-full border border-black py-3 text-[11px] font-bold uppercase tracking-widest transition ${
-            isSoldOut
-              ? "cursor-not-allowed opacity-50"
-              : "cursor-pointer bg-black text-white hover:bg-white hover:text-black"
-          }`}
-        >
-          {isSoldOut ? "Unavailable" : "Inquire"}
-        </button>
+        {inquiryStatus === "sent" ? (
+          <div className="w-full border border-black py-3 text-center text-[11px] font-bold uppercase tracking-widest text-black">
+            Inquiry sent — we&apos;ll be in touch
+          </div>
+        ) : !showInquiryForm ? (
+          <button
+            type="button"
+            onClick={() => setShowInquiryForm(true)}
+            disabled={isSoldOut}
+            className={`w-full border border-black py-3 text-[11px] font-bold uppercase tracking-widest transition ${
+              isSoldOut
+                ? "cursor-not-allowed opacity-50"
+                : "cursor-pointer bg-black text-white hover:bg-white hover:text-black"
+            }`}
+          >
+            {isSoldOut ? "Unavailable" : "Inquire"}
+          </button>
+        ) : (
+          <form onSubmit={handleInquireSubmit} className="space-y-2">
+            <input
+              type="text"
+              required
+              placeholder="Name"
+              value={inquiryName}
+              onChange={(e) => setInquiryName(e.target.value)}
+              className="w-full border border-gray-200 px-3 py-2.5 text-[12px] text-black placeholder:text-gray-400 outline-none focus:border-black transition"
+            />
+            <input
+              type="email"
+              required
+              placeholder="Email"
+              value={inquiryEmail}
+              onChange={(e) => setInquiryEmail(e.target.value)}
+              className="w-full border border-gray-200 px-3 py-2.5 text-[12px] text-black placeholder:text-gray-400 outline-none focus:border-black transition"
+            />
+            <textarea
+              placeholder="Message (optional)"
+              value={inquiryMessage}
+              onChange={(e) => setInquiryMessage(e.target.value)}
+              rows={3}
+              className="w-full border border-gray-200 px-3 py-2.5 text-[12px] text-black placeholder:text-gray-400 outline-none focus:border-black transition resize-none"
+            />
+            {inquiryStatus === "error" && (
+              <p className="text-[11px] text-red-500">Something went wrong. Please try again.</p>
+            )}
+            <div className="flex gap-2">
+              <button
+                type="submit"
+                disabled={inquiryStatus === "sending"}
+                className="flex-1 border border-black bg-black py-2.5 text-[11px] font-bold uppercase tracking-widest text-white transition hover:bg-white hover:text-black disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed"
+              >
+                {inquiryStatus === "sending" ? "Sending..." : "Send Inquiry"}
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setShowInquiryForm(false);
+                  setInquiryStatus("idle");
+                }}
+                className="border border-gray-200 px-4 py-2.5 text-[11px] font-bold uppercase tracking-widest text-gray-400 transition hover:border-black hover:text-black cursor-pointer"
+              >
+                Cancel
+              </button>
+            </div>
+          </form>
+        )}
 
         <Accordion title="Details">
           <p className="text-[12px] leading-[1.6] text-black">
