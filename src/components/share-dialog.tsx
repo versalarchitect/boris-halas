@@ -24,7 +24,9 @@ interface ShareDialogProps {
 
 export function ShareDialog({ isOpen, onClose }: ShareDialogProps) {
   const [copied, setCopied] = useState(false);
-  const url = typeof window !== "undefined" ? window.location.href : "";
+  const url = typeof window !== "undefined"
+    ? window.location.href.replace(/^http:\/\/localhost:\d+/, "https://borishalas.com")
+    : "https://borishalas.com";
 
   const title = "Boris Halas Photography";
   const description = "Boris Halas Photography";
