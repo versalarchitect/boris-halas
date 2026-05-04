@@ -409,10 +409,24 @@ export default function AdminPage() {
 
   return (
     <div
-      className="h-screen bg-white text-black flex overflow-hidden"
+      className="fixed inset-0 z-[90] flex items-center justify-center"
       style={{
+        background: '#000',
         opacity: isMounted ? 1 : 0,
         transition: 'opacity 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+      }}
+    >
+    <div
+      className="bg-white text-black flex overflow-hidden"
+      style={{
+        width: 'calc(100vw - 48px)',
+        height: 'calc(100vh - 48px)',
+        maxWidth: '1600px',
+        maxHeight: '1000px',
+        boxShadow: '0 25px 80px rgba(0, 0, 0, 0.5)',
+        opacity: isMounted ? 1 : 0,
+        transform: isMounted ? 'scale(1)' : 'scale(0.97)',
+        transition: 'all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.1s',
       }}
     >
       {/* ======================== Left Sidebar ======================== */}
@@ -642,6 +656,7 @@ export default function AdminPage() {
           }
         }
       `}</style>
+    </div>
     </div>
   );
 }
