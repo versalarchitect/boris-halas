@@ -1,10 +1,13 @@
 'use client';
 
-import { useState, useCallback, useRef } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import PasswordGate from './components/PasswordGate';
 import SortableProductGrid from './components/SortableProductGrid';
 import ProductEditor from './components/ProductEditor';
+import GalleryManager from './components/GalleryManager';
+import InfoManager from './components/InfoManager';
 import Toast, { type ToastMessage } from './components/Toast';
+import type { GalleryImage } from './components/GalleryManager';
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                              */
@@ -86,6 +89,12 @@ export default function AdminPage() {
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
   const [isMounted, setIsMounted] = useState(false);
 
+  /* Section navigation */
+  const [activeSection, setActiveSection] = useState<string>('store');
+
+  /* Gallery state */
+  const [galleryImages, setGalleryImages] = useState<GalleryImage[]>([]);
+
   const initialLoadDone = useRef(false);
 
   /* ---------------------------------------------------------------- */
@@ -143,6 +152,37 @@ export default function AdminPage() {
       setIsLoading(false);
     }
   }, [authToken, apiFetch, addToast]);
+
+  /* ---------------------------------------------------------------- */
+  /*  Load gallery images                                              */
+  /* ---------------------------------------------------------------- */
+
+  const galleryCategories = ['around', 'fashion', 'editorial', 'music', 'somewhere'];
+
+  const loadGalleryImages = useCallback(async (category: string) => {
+    if (!authToken) return;
+    setIsLoading(true);
+    try {
+      const res = await apiFetch(`/api/admin/gallery?category=${category}`);
+      if (res.ok) {
+        const data: GalleryImage[] = await res.json();
+        setGalleryImages(data);
+      } else {
+        addToast('error', `Failed to load ${category} gallery`);
+      }
+    } catch {
+      addToast('error', `Connection error loading ${category} gallery`);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [authToken, apiFetch, addToast]);
+
+  useEffect(() => {
+    if (authToken && galleryCategories.includes(activeSection)) {
+      loadGalleryImages(activeSection);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeSection, authToken]);
 
   /* ---------------------------------------------------------------- */
   /*  Auth callback                                                    */
@@ -397,14 +437,14 @@ export default function AdminPage() {
 
   const changeCount = unsavedChanges.size;
 
-  const navLinks: { label: string; href: string }[] = [
-    { label: 'Around', href: 'https://www.borishalas.com' },
-    { label: 'Fashion', href: 'https://www.borishalas.com/fashion' },
-    { label: 'Editorial', href: 'https://www.borishalas.com/editorial' },
-    { label: 'Music', href: 'https://www.borishalas.com/music' },
-    { label: 'Somewhere', href: 'https://www.borishalas.com/somewhere' },
-    { label: 'Store', href: '' },
-    { label: 'Info', href: 'https://www.borishalas.com/info' },
+  const navSections: { label: string; key: string }[] = [
+    { label: 'Around', key: 'around' },
+    { label: 'Fashion', key: 'fashion' },
+    { label: 'Editorial', key: 'editorial' },
+    { label: 'Music', key: 'music' },
+    { label: 'Somewhere', key: 'somewhere' },
+    { label: 'Store', key: 'store' },
+    { label: 'Info', key: 'info' },
   ];
 
   return (
@@ -459,36 +499,20 @@ export default function AdminPage() {
           </span>
 
           <nav className="flex flex-col gap-1">
-            {navLinks.map((link) =>
-              link.href ? (
-                <a
-                  key={link.label}
-                  href={link.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-[13px] py-1 hover:text-black transition-colors duration-200"
-                  style={{
-                    fontWeight: 300,
-                    color: '#999',
-                    letterSpacing: '0.02em',
-                  }}
-                >
-                  {link.label}
-                </a>
-              ) : (
-                <span
-                  key={link.label}
-                  className="text-[13px] py-1 cursor-default select-none"
-                  style={{
-                    fontWeight: 600,
-                    color: '#000',
-                    letterSpacing: '0.02em',
-                  }}
-                >
-                  {link.label}
-                </span>
-              )
-            )}
+            {navSections.map((section) => (
+              <button
+                key={section.key}
+                onClick={() => setActiveSection(section.key)}
+                className="text-[13px] py-1 text-left hover:text-black transition-colors duration-200"
+                style={{
+                  fontWeight: activeSection === section.key ? 600 : 300,
+                  color: activeSection === section.key ? '#000' : '#999',
+                  letterSpacing: '0.02em',
+                }}
+              >
+                {section.label}
+              </button>
+            ))}
           </nav>
         </div>
 
@@ -503,7 +527,13 @@ export default function AdminPage() {
             {isSeeding ? 'Loading...' : 'Seed'}
           </button>
           <button
-            onClick={loadProducts}
+            onClick={() => {
+              if (galleryCategories.includes(activeSection)) {
+                loadGalleryImages(activeSection);
+              } else {
+                loadProducts();
+              }
+            }}
             disabled={isLoading}
             className="w-full text-left px-0 py-1.5 text-[10px] font-medium tracking-[0.1em] uppercase text-gray-400 hover:text-black transition-colors duration-300 disabled:opacity-30"
           >
@@ -527,65 +557,82 @@ export default function AdminPage() {
 
       {/* ======================== Main Content ======================== */}
       <main className="flex-1 flex flex-col min-w-0">
-        {/* Horizontal scrolling product area */}
+        {/* Main content area — switches based on activeSection */}
         <section className="flex-1 flex items-stretch py-10 px-8 overflow-x-auto scrollbar-hide">
-          {isLoading && products.length === 0 ? (
-            /* Loading skeleton */
-            <div className="flex gap-6 items-stretch">
-              {[0, 1, 2, 3].map((i) => (
-                <div
-                  key={i}
-                  className="flex-shrink-0 bg-white"
-                  style={{ width: 320 }}
-                >
-                  <div
-                    className="skeleton"
-                    style={{ width: 320, aspectRatio: '3/4' }}
-                  />
-                  <div className="pt-4 space-y-2">
-                    <div className="h-4 w-3/4 skeleton rounded" />
-                    <div className="h-3 w-1/4 skeleton rounded" />
+          {activeSection === 'store' && (
+            <>
+              {isLoading && products.length === 0 ? (
+                /* Loading skeleton */
+                <div className="flex gap-6 items-stretch">
+                  {[0, 1, 2, 3].map((i) => (
+                    <div
+                      key={i}
+                      className="flex-shrink-0 bg-white"
+                      style={{ width: 320 }}
+                    >
+                      <div
+                        className="skeleton"
+                        style={{ width: 320, aspectRatio: '3/4' }}
+                      />
+                      <div className="pt-4 space-y-2">
+                        <div className="h-4 w-3/4 skeleton rounded" />
+                        <div className="h-3 w-1/4 skeleton rounded" />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <SortableProductGrid
+                  products={products}
+                  onReorder={handleReorder}
+                  onEditProduct={handleEditProduct}
+                  onDeleteProduct={handleDeleteProduct}
+                  onAddProduct={handleAddProduct}
+                  unsavedChanges={unsavedChanges}
+                />
+              )}
+
+              {/* Empty state */}
+              {!isLoading && products.length === 0 && (
+                <div className="flex-1 flex items-center justify-center">
+                  <div className="text-center">
+                    <p className="text-sm font-light text-gray-400 mb-2">
+                      No products yet
+                    </p>
+                    <p className="text-xs font-light text-gray-300 mb-8">
+                      Add a product or seed from the local config
+                    </p>
+                    <div className="flex items-center justify-center gap-3">
+                      <button
+                        onClick={handleAddProduct}
+                        className="px-6 py-2.5 text-[10px] tracking-[0.15em] uppercase border border-black text-black hover:bg-black hover:text-white transition-all duration-300"
+                      >
+                        Add Product
+                      </button>
+                      <button
+                        onClick={handleSeed}
+                        className="px-6 py-2.5 text-[10px] font-medium tracking-[0.15em] uppercase text-gray-400 hover:text-black border border-gray-200 hover:border-gray-400 transition-all duration-300"
+                      >
+                        Seed from Config
+                      </button>
+                    </div>
                   </div>
                 </div>
-              ))}
-            </div>
-          ) : (
-            <SortableProductGrid
-              products={products}
-              onReorder={handleReorder}
-              onEditProduct={handleEditProduct}
-              onDeleteProduct={handleDeleteProduct}
-              onAddProduct={handleAddProduct}
-              unsavedChanges={unsavedChanges}
+              )}
+            </>
+          )}
+
+          {galleryCategories.includes(activeSection) && (
+            <GalleryManager
+              category={activeSection}
+              images={galleryImages}
+              onImagesChange={setGalleryImages}
+              authToken={authToken}
             />
           )}
 
-          {/* Empty state */}
-          {!isLoading && products.length === 0 && (
-            <div className="flex-1 flex items-center justify-center">
-              <div className="text-center">
-                <p className="text-sm font-light text-gray-400 mb-2">
-                  No products yet
-                </p>
-                <p className="text-xs font-light text-gray-300 mb-8">
-                  Add a product or seed from the local config
-                </p>
-                <div className="flex items-center justify-center gap-3">
-                  <button
-                    onClick={handleAddProduct}
-                    className="px-6 py-2.5 text-[10px] tracking-[0.15em] uppercase border border-black text-black hover:bg-black hover:text-white transition-all duration-300"
-                  >
-                    Add Product
-                  </button>
-                  <button
-                    onClick={handleSeed}
-                    className="px-6 py-2.5 text-[10px] font-medium tracking-[0.15em] uppercase text-gray-400 hover:text-black border border-gray-200 hover:border-gray-400 transition-all duration-300"
-                  >
-                    Seed from Config
-                  </button>
-                </div>
-              </div>
-            </div>
+          {activeSection === 'info' && (
+            <InfoManager authToken={authToken} />
           )}
         </section>
 
