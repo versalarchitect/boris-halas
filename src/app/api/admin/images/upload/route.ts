@@ -47,16 +47,16 @@ export async function POST(request: NextRequest) {
 
     const url = getImageUrl(storagePath);
 
-    // Create image record
+    // Create or update image record
     const { data: imageRecord, error: insertError } = await client
       .from('bh_product_images')
-      .insert({
+      .upsert({
         product_id: productId,
         filename: file.name,
         storage_path: storagePath,
         url,
         sort_order: nextSortOrder,
-      })
+      }, { onConflict: 'product_id,filename' })
       .select()
       .single();
 
